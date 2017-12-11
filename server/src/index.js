@@ -1,20 +1,16 @@
-const express = require('express');
-const React = require('react');
-const renderToString = require('react-dom/server').renderToString;
+import express from 'express';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 
-const Home = require('./client/components/Home.jsx').default;
-
+import Home from './client/components/Home.jsx';
 
 const app = express();
 
-
-
 app.get('/', (req, res) => {
-  const content = renderToString(<Home/>);
+  const content = renderToString(<Home />);
 
   res.send(content);
 });
-
 
 //  SERVER SETUP
 
