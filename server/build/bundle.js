@@ -92,29 +92,28 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Home = __webpack_require__(12);
+var _HomePage = __webpack_require__(12);
 
-var _Home2 = _interopRequireDefault(_Home);
+var _HomePage2 = _interopRequireDefault(_HomePage);
 
-var _UsersList = __webpack_require__(13);
+var _UsersListPage = __webpack_require__(13);
 
-var _UsersList2 = _interopRequireDefault(_UsersList);
+var _UsersListPage2 = _interopRequireDefault(_UsersListPage);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = [{
+exports.default = [_extends({}, _HomePage2.default, {
   path: '/',
-  component: _Home2.default,
   exact: true
-}, {
-  loadData: _UsersList.loadData,
-  path: '/users',
-  component: _UsersList2.default
-}];
+}), _extends({}, _UsersListPage2.default, {
+  path: '/users'
+})];
 
 /***/ }),
 /* 4 */
@@ -266,6 +265,10 @@ var _reactRedux = __webpack_require__(2);
 
 var _reactRouterConfig = __webpack_require__(1);
 
+var _serializeJavascript = __webpack_require__(19);
+
+var _serializeJavascript2 = _interopRequireDefault(_serializeJavascript);
+
 var _routes = __webpack_require__(3);
 
 var _routes2 = _interopRequireDefault(_routes);
@@ -287,7 +290,7 @@ exports.default = function (path, store) {
     )
   ));
 
-  return '\n    <html>\n      <head></head>\n      <body>\n        <div id="root">' + content + '</div>\n        <script src="bundle.js"></script>\n      </body>\n    </html>  \n  ';
+  return '\n    <html>\n      <head></head>\n      <body>\n        <div id="root">' + content + '</div>\n        <script>\n          window.INITIAL_STATE = ' + (0, _serializeJavascript2.default)(store.getState()) + '\n        </script>\n        <script src="bundle.js"></script>\n      </body>\n    </html>  \n  ';
 };
 
 /***/ }),
@@ -340,7 +343,9 @@ var Home = function Home() {
   );
 };
 
-exports.default = Home;
+exports.default = {
+  component: Home
+};
 
 /***/ }),
 /* 13 */
@@ -362,7 +367,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(2);
 
-var _actions = __webpack_require__(4);
+var _index = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -425,10 +430,13 @@ var mapStateToProps = function mapStateToProps(_ref2) {
 };
 
 var loadData = exports.loadData = function loadData(store) {
-  return store.dispatch((0, _actions.fetchUsers)());
+  return store.dispatch((0, _index.fetchUsers)());
 };
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps, { fetchUsers: _actions.fetchUsers })(UsersList);
+exports.default = {
+  component: (0, _reactRedux.connect)(mapStateToProps, { fetchUsers: _index.fetchUsers })(UsersList),
+  loadData: loadData
+};
 
 /***/ }),
 /* 14 */
@@ -516,6 +524,12 @@ exports.default = function () {
       return state;
   }
 };
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+module.exports = require("serialize-javascript");
 
 /***/ })
 /******/ ]);
