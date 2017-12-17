@@ -11,12 +11,15 @@ const app = express();
 
 //  APP SETUP
 
-app.use('/api', proxy('http://react-ssr-api.herokuapp.com', {
-  proxyReqOptDecorator(opts) {
-    opts.headers['x-forwarded-host'] = 'localhost:3000';
-    return opts;
-  }
-}));
+app.use(
+  '/api',
+  proxy('http://react-ssr-api.herokuapp.com', {
+    proxyReqOptDecorator(opts) {
+      opts.headers['x-forwarded-host'] = 'localhost:3000';
+      return opts;
+    }
+  })
+);
 
 app.use(express.static('public'));
 
@@ -25,13 +28,19 @@ app.use(express.static('public'));
 app.get('*', (req, res) => {
   const store = createStore(req);
 
-  const promises = matchRoutes(routes, req.path).map(({route}) => {
-    return route.loadData ? route.loadData(store) : null;
-  });
+  const promises = matchRoutes(routes, req.path)
+    .map(({ route }) => {
+      return route.loadData ? route.loadData(store) : null;
+    })
+    .map(promise => {
+      if (promise) {
+        return new Promise(resolve => promise.then(resolve).catch(resolve));
+      }
+    });
 
   Promise.all(promises).then(() => {
     const context = {};
-    const content =renderer(req.path, store, context);
+    const content = renderer(req.path, store, context);
 
     if (context.notFound) {
       res.status(404);
@@ -39,7 +48,6 @@ app.get('*', (req, res) => {
 
     res.send(content);
   });
-
 });
 
 //  SERVER SETUP
