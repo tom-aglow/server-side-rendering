@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware} from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import axios from 'axios';
 
@@ -11,5 +11,9 @@ export default req => {
       cookie: req.get('cookie') || ''
     }
   });
-  return createStore(reducers, {}, applyMiddleware(thunk.withExtraArgument(axiosInstance)));
+  return createStore(
+    reducers,
+    {},
+    applyMiddleware(thunk.withExtraArgument(axiosInstance))
+  );
 };
